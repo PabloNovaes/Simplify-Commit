@@ -6,22 +6,29 @@ import ora from "ora";
 
 const URL_REGEX = /^https:\/\/github\.com\/([\w-]+)\/([\w.-]+)(\.git)?$/
 
-async function askRemoteOrigin() {
-    const { remoteOrigin } = await inquirer.prompt([
-        {
-            type: "input",
-            name: "remoteOrigin",
-            message: "Adicione a URL do seu repositório remoto:",
-            validate: (input) => {
-                if (URL_REGEX.test(input)) {
-                    return true; // Aceita
-                }
-                return "Por favor, insira uma URL válida do GitHub (ex: https://github.com/usuario/repositorio.git)";
-            }
-        }
-    ]);
+async function askRemoteOrigin(repoIsInitialized) {
+    if (repoIsInitialized) {
 
-    return remoteOrigin;
+        const { remoteOrigin } = await inquirer.prompt([
+            {
+                type: "input",
+                name: "remoteOrigin",
+                message: "Adicione a URL do seu repositório remoto:",
+                validate: (input) => {
+                    if (URL_REGEX.test(input)) {
+                        return true; // Aceita
+                    }
+                    return "Por favor, insira uma URL válida do GitHub (ex: https://github.com/usuario/repositorio.git)";
+                }
+            }
+        ]);
+
+        console.log("Adicionando repósitorio remoto...")
+        execSync(`git remote add origin ${remoteOrigin}`, { stdio: "inherit" })
+
+        console.log("Definindo a branch principal (main)...")
+        execSync('git branch -M main', { stdio: "inherit" })
+    }
 }
 
 async function main() {
@@ -72,13 +79,7 @@ async function main() {
         console.log("📌 Fazendo commit...");
         execSync(`git commit -m "${commitMessage}"`, { stdio: "inherit" });
 
-        const url = await askRemoteOrigin();
-
-        console.log("Adicionando repósitorio remoto...")
-        execSync(`git remote add origin ${url}`, { stdio: "inherit" })
-
-        console.log("Definindo a branch principal (main)...")
-        execSync('git branch -M main', { stdio: "inherit" })
+        await askRemoteOrigin();
 
         const spinner = ora("🚀 Enviando para o repositório...").start();
         try {
