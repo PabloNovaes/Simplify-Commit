@@ -37,7 +37,6 @@ async function main() {
             repoIsInitialized = false
             console.log("")
         }
-        console.log(repoIsInitialized);
 
         const { commitType, message } = await inquirer.prompt([
             {
