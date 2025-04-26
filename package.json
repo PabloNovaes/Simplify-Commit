@@ -1,0 +1,21 @@
+{
+  "name": "simplify-commit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "node index.js"
+  },
+  "bin": {
+    "commit": "./index.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "inquirer": "^12.4.3",
+    "ora": "^8.2.0"
+  }
+}
